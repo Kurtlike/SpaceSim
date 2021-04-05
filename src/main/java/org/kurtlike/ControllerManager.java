@@ -78,6 +78,10 @@ public class ControllerManager {
                 primaryController.getMainPane().getChildren().remove(chooseRoot);
 
             });
+            chooseWindowController.getCancel().setOnAction(event1 -> {
+                dialogEvent = false;
+                primaryController.getMainPane().getChildren().remove(chooseRoot);
+            });
         });
         Thread thread = new Thread(runnable,"mouseListener");
         thread.start();
