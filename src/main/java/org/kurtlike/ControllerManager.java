@@ -4,7 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
+
 import org.kurtlike.bodies.Body;
 import org.kurtlike.controlers.ChooseWindowController;
 import org.kurtlike.controlers.PrimaryController;
@@ -37,7 +37,7 @@ public class ControllerManager {
 
     public void animationStart(){
         GraphicsContext graphicsContext = primaryController.getCanvas().getGraphicsContext2D();
-        Image sun = new Image("sun.png",100,100,true,false);
+        Image earth = new Image("Earth.png",32,32,true,false);
         Image background = new Image("space.png",1280,720,true,false);
         addBody();
         SpaceAnimation spaceAnimation = new SpaceAnimation(30) {
@@ -45,10 +45,11 @@ public class ControllerManager {
             @Override
             public void  handle() {
                 if(!dialogEvent) {
-                    systemGravity.updateCoordinates((this.getFrameTime()/10000000000d)*primaryController.getSpeed()); //to seconds from nano seconds
+
+                    update(this.getFrameTime());
                     graphicsContext.drawImage(background,0,0);
                     for(Body body:systemGravity.getBodies()) {
-                        graphicsContext.drawImage(sun, body.getX(), body.getY());
+                        graphicsContext.drawImage(earth, body.getX(), body.getY());
                     }
 
                 }
@@ -59,7 +60,7 @@ public class ControllerManager {
 
 
     private void addBody(){
-        Runnable runnable = () -> primaryController.getCanvas().setOnMouseClicked(event -> {
+        primaryController.getCanvas().setOnMouseClicked(event -> {
             dialogEvent = true;
 
             primaryController.getMainPane().getChildren().add(chooseRoot);
@@ -68,7 +69,7 @@ public class ControllerManager {
                         chooseWindowController.getName(),
                         chooseWindowController.getXCoordinate(),
                         chooseWindowController.getYCoordinate(),
-                        chooseWindowController.getMass() * Math.pow(10,10),
+                        chooseWindowController.getMass() * Math.pow(10,chooseWindowController.getMassDegree()),
                         chooseWindowController.getXSpeed(),
                         chooseWindowController.getYSpeed(),
                         chooseWindowController.getXAcceleration(),
@@ -83,12 +84,13 @@ public class ControllerManager {
                 primaryController.getMainPane().getChildren().remove(chooseRoot);
             });
         });
-        Thread thread = new Thread(runnable,"mouseListener");
-        thread.start();
     }
-
-    public FXMLLoader getPrimaryFxml() {
-        return primaryFxml;
+    private void update(long time){
+        Runnable runnable = () -> {
+            systemGravity.updateCoordinates((time/10000000000d)*primaryController.getSpeed()); //to seconds from nano seconds
+        };
+        Thread thread = new Thread(runnable,"PositionHandler");
+        thread.start();
     }
     public Parent getRoot() {
         return primaryRoot;

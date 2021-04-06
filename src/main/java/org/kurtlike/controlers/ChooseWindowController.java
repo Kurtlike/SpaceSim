@@ -10,6 +10,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ChooseWindowController {
+
+    @FXML
+    private TextField massDegree;
+
+
     @FXML
     private Pane choosePane;
 
@@ -92,6 +97,9 @@ public class ChooseWindowController {
         return cancel;
     }
 
+    public double getMassDegree() {
+        return Double.parseDouble(massDegree.getText());
+    }
 
     public double getMass() {
         return Double.parseDouble(mass.getText());

@@ -34,14 +34,14 @@ public class SystemGravity {
     }
 
     private double getNewXAcceleration(Body body1, Body body2){
-        double a =  body1.getX() - body2.getX();
-        double b = body1.getY() - body2.getY();
+        double a = body2.getX() - body1.getX();
+        double b = body2.getY() - body1.getY();
         double c = Math.sqrt(Math.pow(b, 2) + Math.pow(a, 2));
         return G  * body2.getMass() * a / Math.pow(c, 3);
     }
     private double getNewYAcceleration(Body body1, Body body2){
-        double a =  body1.getX() - body2.getX();
-        double b = body1.getY() - body2.getY();
+        double a = body2.getX() - body1.getX();
+        double b = body2.getY() - body1.getY();
         double c = Math.sqrt(Math.pow(b, 2) + Math.pow(a, 2));
         return G  * body2.getMass() * b / Math.pow(c, 3);
     }
